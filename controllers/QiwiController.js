@@ -1,5 +1,7 @@
 import axios from '../axiosInstance.js';
 
+const RUB_CODE = 643;
+
 export function getAuthorizationHeader(token) {
     return `Bearer ${token}`;
 }
@@ -31,7 +33,7 @@ class QiwiController {
             });
     
             const balanceResponseData = balanceResponse.data;
-            const rubWallet = balanceResponseData.accounts.find((account) => account.currency === 643);
+            const rubWallet = balanceResponseData.accounts.find((account) => account.currency === RUB_CODE);
             const balance = rubWallet.balance.amount;
     
             response.status(200).json({ 
@@ -39,7 +41,7 @@ class QiwiController {
                 balance
             });
         } catch (error) {
-            // console.error(error);
+            console.error(error);
             response.status(500).send('Server error!');
         }
     }
@@ -58,11 +60,11 @@ class QiwiController {
                     id: String(1000 * new Date().valueOf()),
                     sum: {
                         amount: sum,
-                        currency: '643',
+                        currency: String(RUB_CODE),
                     },
                     paymentMethod: {
                         type: 'Account',
-                        accountId: '643',
+                        accountId: String(RUB_CODE),
                     },
                     fields: {
                         account: goalWallet,
